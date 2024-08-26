@@ -7,10 +7,10 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="/static/css/universal.css" />
-        <link rel="stylesheet" href="/static/css/leaflet-1.7.1.css"/>
-        <script src="/static/js/leaflet-1.7.1.js"></script>
-        <script src="/static/js/jquery-3.7.1.js"></script>
+        <link rel="stylesheet" href="../static/css/universal.css" />
+        <link rel="stylesheet" href="../static/css/leaflet-1.7.1.css"/>
+        <script src="../static/js/leaflet-1.7.1.js"></script>
+        <script src="../static/js/jquery-3.7.1.js"></script>
     </head>
     <body>
         <div id="page-loading">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="flex justify-between items-end">
                     <span class="f16" id="aircraft-airline">N/A</span>
-                    <img height="16px" width="auto" src="/static/img/hexdb.png">
+                    <img height="16px" width="auto" src="../static/img/hexdb.png">
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
                         <span id="route-origin"></span>
                     </div>
                     <div class="flex left-1-2 absolute items-center">
-                        <img src="/static/img/plane-departure.png" width="30px" style="margin-left:-15px;">
+                        <img src="../static/img/plane-departure.png" width="30px" style="margin-left:-15px;">
                     </div>
                     <div class="flex justify-center flex50">
                         <span id="route-destination"></span>
@@ -97,14 +97,14 @@
             </div>
         </div>
 
-        <script src="/static/js/universal.js"></script>
-        <script src="/static/js/leaflet.rotatedMarker.js"></script>
+        <script src="../static/js/universal.js"></script>
+        <script src="../static/js/leaflet.rotatedMarker.js"></script>
         <script>
             var selectedMarker = null;
             var markers = {};  // To store and track the markers
 
             function loadMarkers() {
-                fetch('/markers')
+                fetch('../markers')
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById('page-loading').style.display = 'none';
@@ -146,7 +146,7 @@
                     .catch(error => console.error('Error fetching markers:', error));
             }
         function updateMarkers() {
-            fetch('/markers')
+            fetch('../markers')
                 .then(response => response.json())
                 .then(data => {
                     let activeHexes = new Set();  // Set to track the hexes of markers still in the data
