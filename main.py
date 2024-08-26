@@ -23,7 +23,7 @@ def generateMarkers():
          route_info = requests.get("https://hexdb.io/api/v1/route/iata/" + aircraft['flight'].strip())
          route_data = route_info.json()
          if image_url == "n/a":
-            image_url = "../static/img/image-unavailable.png"
+            image_url = "../static/img/image-unavailable.jpg"
          if "flight" in route_data:
             route_list = route_data['route'].split("-")
             if len(route_list) == 2:
