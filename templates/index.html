@@ -1,237 +1,233 @@
 <!doctype html>
 <html lang="en">
-<head>
-<title>HexDB Flight Radar</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', filename='universal.css') }}" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-crossorigin=""></script>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-</head>
-<body>
+    <head>
+        <title>HexDB Flight Radar</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/universal.css" />
+        <link rel="stylesheet" href="/static/css/leaflet-1.7.1.css"/>
+        <script src="/static/js/leaflet-1.7.1.js"></script>
+        <script src="/static/js/jquery-3.7.1.js"></script>
+    </head>
+    <body>
+        <div id="page-loading">
+           <div id="loader">
+              <div id="jump1"></div>
+              <div id="jump2"></div>
+              <div id="jump3"></div>
+              <div id="jump4"></div>
+              <div id="jump5"></div>
+           </div>
+        </div>
 
-<div id="page-loading">
-   <div id="loader">
-      <div id="jump1"></div>
-      <div id="jump2"></div>
-      <div id="jump3"></div>
-      <div id="jump4"></div>
-      <div id="jump5"></div>
-   </div>
-</div>
-
-<div id="map"></div>
-<div id="sidebar">
-    <div class="ps mt-2 mb-2">
-        <div class="flex justify-between items-end">
-            <div class="flex items-center">
-                <span id="aircraft-callsign">N/A</span>
-                <div class="tag ml-1">
-                    <span id="aircraft-type-short">N/A</span>
+        <div id="map"></div>
+        <div id="sidebar">
+            <div class="ps mt-2 mb-2">
+                <div class="flex justify-between items-end">
+                    <div class="flex items-center">
+                        <span id="aircraft-callsign">N/A</span>
+                        <div class="tag ml-1">
+                            <span id="aircraft-type-short">N/A</span>
+                        </div>
+                    </div>
+                    <span class="close-btn" onclick="closeSidebar()">&times;</span>
+                </div>
+                <div class="flex justify-between items-end">
+                    <span class="f16" id="aircraft-airline">N/A</span>
+                    <img height="16px" width="auto" src="/static/img/hexdb.png">
                 </div>
             </div>
-            <span class="close-btn" onclick="closeSidebar()">&times;</span>
-        </div>
-        <div class="flex justify-between items-end">
-            <span class="f16" id="aircraft-airline">N/A</span>
-            <img height="16px" width="auto" src="/static/hexdb.png">
-        </div>
-    </div>
 
-    <div id="aircraftImage">
-         <img id="aircraftImageTag">
-    </div>
+            <div id="aircraftImage">
+                 <img id="aircraftImageTag">
+            </div>
 
-    <div id="routeInfo" class="mt-2">
-        <div class="flex w-full relative">
-            <div class="flex justify-center flex50">
-                <span id="route-origin"></span>
+            <div id="routeInfo" class="mt-2">
+                <div class="flex w-full relative">
+                    <div class="flex justify-center flex50">
+                        <span id="route-origin"></span>
+                    </div>
+                    <div class="flex left-1-2 absolute items-center">
+                        <img src="/static/img/plane-departure.png" width="30px" style="margin-left:-15px;">
+                    </div>
+                    <div class="flex justify-center flex50">
+                        <span id="route-destination"></span>
+                    </div>
+                </div>
             </div>
-            <div class="flex left-1-2 absolute items-center">
-                <img src="/static/plane-departure.png" width="30px" style="margin-left:-15px;">
-            </div>
-            <div class="flex justify-center flex50">
-                <span id="route-destination"></span>
-            </div>
-        </div>
-    </div>
 
-    <hr>
+            <hr>
 
-    <div id="aircraftInfo" class="ps mt-2">
-        <div class="flex w-full">
-            <div class="p5 flex100">
-                <span class="label">Type</span><span id="aircraft-type">n/a</span>
+            <div id="aircraftInfo" class="ps mt-2">
+                <div class="flex w-full">
+                    <div class="p5 flex100">
+                        <span class="label">Type</span><span id="aircraft-type">n/a</span>
+                    </div>
+                </div>
+                <div class="flex w-full mt-1">
+                    <div class="p5 flex33">
+                        <span class="label">Hex</span><span id="aircraft-hex">n/a</span>
+                    </div>
+                    <div class="p5 flex33">
+                        <span class="label">Squawk</span><span id="aircraft-squawk">n/a</span>
+                    </div>
+                    <div class="p5 flex33">
+                        <span class="label">Registration</span><span id="aircraft-reg">n/a</span>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="flex w-full mt-1">
-            <div class="p5 flex33">
-                <span class="label">Hex</span><span id="aircraft-hex">n/a</span>
-            </div>
-            <div class="p5 flex33">
-                <span class="label">Squawk</span><span id="aircraft-squawk">n/a</span>
-            </div>
-            <div class="p5 flex33">
-                <span class="label">Registration</span><span id="aircraft-reg">n/a</span>
-            </div>
-        </div>
-    </div>
 
-    <hr>
+            <hr>
 
-    <div id="aircraftStats" class="ps mt-2">
-        <div class="flex w-full mt-1">
-            <div class="p5 flex33">
-                <span class="label">Speed</span><span id="aircraft-speed">n/a</span>
-            </div>
-            <div class="p5 flex33">
-                <span class="label">Heading</span><span id="aircraft-heading">n/a</span>
-            </div>
-            <div class="p5 flex33">
-                <span class="label">Altitude</span><span id="aircraft-altitude">n/a</span>
+            <div id="aircraftStats" class="ps mt-2">
+                <div class="flex w-full mt-1">
+                    <div class="p5 flex33">
+                        <span class="label">Speed</span><span id="aircraft-speed">n/a</span>
+                    </div>
+                    <div class="p5 flex33">
+                        <span class="label">Heading</span><span id="aircraft-heading">n/a</span>
+                    </div>
+                    <div class="p5 flex33">
+                        <span class="label">Altitude</span><span id="aircraft-altitude">n/a</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-<script src="{{ url_for('static', filename='universal.js') }}" /></script>
-<script src="https://rawgit.com/bbecquet/Leaflet.RotatedMarker/master/leaflet.rotatedMarker.js"></script>
-<script>
-    var selectedMarker = null;
-    var markers = {};  // To store and track the markers
+        <script src="/static/js/universal.js"></script>
+        <script src="/static/js/leaflet.rotatedMarker.js"></script>
+        <script>
+            var selectedMarker = null;
+            var markers = {};  // To store and track the markers
 
-    function loadMarkers() {
-        fetch('/markers')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('page-loading').style.display = 'none';
-                // Loop through the marker data from the Flask backend
-                data.forEach(function(markerData) {
-                    var marker = L.marker([markerData.lat, markerData.lon], {
-                        icon: airplaneIcon,
-                        rotationAngle: markerData.track
-                    }).addTo(map)
-                      .on('click', function() {
-                        if (selectedMarker) {
-                          selectedMarker.setIcon(airplaneIcon);
+            function loadMarkers() {
+                fetch('/markers')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('page-loading').style.display = 'none';
+                        // Loop through the marker data from the Flask backend
+                        data.forEach(function(markerData) {
+                            var marker = L.marker([markerData.lat, markerData.lon], {
+                                icon: airplaneIcon,
+                                rotationAngle: markerData.track
+                            }).addTo(map)
+                              .on('click', function() {
+                                if (selectedMarker) {
+                                  selectedMarker.setIcon(airplaneIcon);
+                                }
+                                this.setIcon(airplaneIconSel);
+                                selectedMarker = this;
+                                selectedMarkerHex = markerData.hex
+                                document.getElementById('aircraft-hex').textContent = markerData.hex
+                                document.getElementById('aircraft-callsign').textContent = markerData.callsign
+                                document.getElementById('aircraft-squawk').textContent = markerData.squawk
+                                document.getElementById('aircraftImageTag').src = markerData.image
+                                document.getElementById('aircraft-airline').textContent = markerData.airline
+                                document.getElementById('aircraft-type').textContent = markerData.type
+                                document.getElementById('aircraft-type-short').textContent = markerData.typeshort
+                                document.getElementById('aircraft-reg').textContent = markerData.reg
+
+                                document.getElementById('route-origin').textContent = markerData.origin
+                                document.getElementById('route-destination').textContent = markerData.destination
+
+                                document.getElementById('aircraft-speed').textContent = markerData.speed
+                                document.getElementById('aircraft-heading').textContent = markerData.track
+                                document.getElementById('aircraft-altitude').textContent = markerData.altitude
+
+                                // Show the sidebar
+                                document.getElementById('sidebar').style.display = 'block';
+                              });
+                            markers[markerData.hex] = marker;  // Store the marker by its unique hex
+                        });
+                    })
+                    .catch(error => console.error('Error fetching markers:', error));
+            }
+        function updateMarkers() {
+            fetch('/markers')
+                .then(response => response.json())
+                .then(data => {
+                    let activeHexes = new Set();  // Set to track the hexes of markers still in the data
+
+                    // Update existing markers and track active hexes
+                    data.forEach(function(markerData) {
+                        var marker = markers[markerData.hex];
+                        activeHexes.add(markerData.hex);  // Mark this hex as active
+
+                        if (marker) {
+                            // Update the marker's position and rotation
+                            marker.setLatLng([markerData.lat, markerData.lon]);
+                            marker.setRotationAngle(markerData.track);
+                        } else {
+                            // If the marker doesn't exist, create it
+                            marker = L.marker([markerData.lat, markerData.lon], {
+                                icon: airplaneIcon,
+                                rotationAngle: markerData.track
+                            }).addTo(map)
+                              .on('click', function() {
+                                  if (selectedMarker) {
+                                      selectedMarker.setIcon(airplaneIcon);
+                                  }
+                                  this.setIcon(airplaneIconSel);
+                                  selectedMarker = this;
+                                  selectedMarkerHex = markerData.hex;
+
+                                  // Update the sidebar with the marker's data
+                                  document.getElementById('aircraft-hex').textContent = markerData.hex;
+                                  document.getElementById('aircraft-callsign').textContent = markerData.callsign;
+                                  document.getElementById('aircraft-squawk').textContent = markerData.squawk;
+                                  document.getElementById('aircraftImageTag').src = markerData.image;
+                                  document.getElementById('aircraft-airline').textContent = markerData.airline;
+                                  document.getElementById('aircraft-type').textContent = markerData.type;
+                                  document.getElementById('aircraft-type-short').textContent = markerData.typeshort;
+                                  document.getElementById('aircraft-reg').textContent = markerData.reg;
+                                  document.getElementById('route-origin').textContent = markerData.origin;
+                                  document.getElementById('route-destination').textContent = markerData.destination;
+                                  document.getElementById('aircraft-speed').textContent = markerData.speed;
+                                  document.getElementById('aircraft-heading').textContent = markerData.track;
+                                  document.getElementById('aircraft-altitude').textContent = markerData.altitude;
+
+                                  // Show the sidebar
+                                  document.getElementById('sidebar').style.display = 'block';
+                              });
+
+                            markers[markerData.hex] = marker;  // Store the new marker
                         }
-                        this.setIcon(airplaneIconSel);
-                        selectedMarker = this;
-                        selectedMarkerHex = markerData.hex
-                        document.getElementById('aircraft-hex').textContent = markerData.hex
-                        document.getElementById('aircraft-callsign').textContent = markerData.callsign
-                        document.getElementById('aircraft-squawk').textContent = markerData.squawk
-                        document.getElementById('aircraftImageTag').src = markerData.image
-                        document.getElementById('aircraft-airline').textContent = markerData.airline
-                        document.getElementById('aircraft-type').textContent = markerData.type
-                        document.getElementById('aircraft-type-short').textContent = markerData.typeshort
-                        document.getElementById('aircraft-reg').textContent = markerData.reg
 
-                        document.getElementById('route-origin').textContent = markerData.origin
-                        document.getElementById('route-destination').textContent = markerData.destination
+                        // Update sidebar data if the selected marker is being updated
+                        if (selectedMarker && markerData.hex == selectedMarkerHex) {
+                            document.getElementById('aircraft-squawk').textContent = markerData.squawk;
+                            document.getElementById('aircraft-speed').textContent = markerData.speed;
+                            document.getElementById('aircraft-heading').textContent = markerData.track;
+                            document.getElementById('aircraft-altitude').textContent = markerData.altitude;
+                        }
+                    });
 
-                        document.getElementById('aircraft-speed').textContent = markerData.speed
-                        document.getElementById('aircraft-heading').textContent = markerData.track
-                        document.getElementById('aircraft-altitude').textContent = markerData.altitude
+                    // Remove markers that are no longer in the data
+                    for (var hex in markers) {
+                        if (!activeHexes.has(hex)) {
+                            map.removeLayer(markers[hex]);  // Remove the marker from the map
+                            delete markers[hex];  // Remove it from the markers object
+                        }
+                    }
+                })
+                .catch(error => console.error('Error updating markers:', error));
+        }
 
-                        // Show the sidebar
-                        document.getElementById('sidebar').style.display = 'block';
-                      });
-                    markers[markerData.hex] = marker;  // Store the marker by its unique hex
-                });
-            })
-            .catch(error => console.error('Error fetching markers:', error));
-    }
-function updateMarkers() {
-    fetch('/markers')
-        .then(response => response.json())
-        .then(data => {
-            let activeHexes = new Set();  // Set to track the hexes of markers still in the data
-
-            // Update existing markers and track active hexes
-            data.forEach(function(markerData) {
-                var marker = markers[markerData.hex];
-                activeHexes.add(markerData.hex);  // Mark this hex as active
-
-                if (marker) {
-                    // Update the marker's position and rotation
-                    marker.setLatLng([markerData.lat, markerData.lon]);
-                    marker.setRotationAngle(markerData.track);
-                } else {
-                    // If the marker doesn't exist, create it
-                    marker = L.marker([markerData.lat, markerData.lon], {
-                        icon: airplaneIcon,
-                        rotationAngle: markerData.track
-                    }).addTo(map)
-                      .on('click', function() {
-                          if (selectedMarker) {
-                              selectedMarker.setIcon(airplaneIcon);
-                          }
-                          this.setIcon(airplaneIconSel);
-                          selectedMarker = this;
-                          selectedMarkerHex = markerData.hex;
-
-                          // Update the sidebar with the marker's data
-                          document.getElementById('aircraft-hex').textContent = markerData.hex;
-                          document.getElementById('aircraft-callsign').textContent = markerData.callsign;
-                          document.getElementById('aircraft-squawk').textContent = markerData.squawk;
-                          document.getElementById('aircraftImageTag').src = markerData.image;
-                          document.getElementById('aircraft-airline').textContent = markerData.airline;
-                          document.getElementById('aircraft-type').textContent = markerData.type;
-                          document.getElementById('aircraft-type-short').textContent = markerData.typeshort;
-                          document.getElementById('aircraft-reg').textContent = markerData.reg;
-                          document.getElementById('route-origin').textContent = markerData.origin;
-                          document.getElementById('route-destination').textContent = markerData.destination;
-                          document.getElementById('aircraft-speed').textContent = markerData.speed;
-                          document.getElementById('aircraft-heading').textContent = markerData.track;
-                          document.getElementById('aircraft-altitude').textContent = markerData.altitude;
-
-                          // Show the sidebar
-                          document.getElementById('sidebar').style.display = 'block';
-                      });
-
-                    markers[markerData.hex] = marker;  // Store the new marker
-                }
-
-                // Update sidebar data if the selected marker is being updated
-                if (selectedMarker && markerData.hex == selectedMarkerHex) {
-                    document.getElementById('aircraft-squawk').textContent = markerData.squawk;
-                    document.getElementById('aircraft-speed').textContent = markerData.speed;
-                    document.getElementById('aircraft-heading').textContent = markerData.track;
-                    document.getElementById('aircraft-altitude').textContent = markerData.altitude;
-                }
-            });
-
-            // Remove markers that are no longer in the data
-            for (var hex in markers) {
-                if (!activeHexes.has(hex)) {
-                    map.removeLayer(markers[hex]);  // Remove the marker from the map
-                    delete markers[hex];  // Remove it from the markers object
+            function closeSidebar() {
+                document.getElementById('sidebar').style.display = 'none';
+                // Reset the selected marker icon when closing the sidebar
+                if (selectedMarker) {
+                    selectedMarker.setIcon(airplaneIcon);
+                    selectedMarker = null;
                 }
             }
-        })
-        .catch(error => console.error('Error updating markers:', error));
-}
-
-    function closeSidebar() {
-        document.getElementById('sidebar').style.display = 'none';
-        // Reset the selected marker icon when closing the sidebar
-        if (selectedMarker) {
-            selectedMarker.setIcon(airplaneIcon);
-            selectedMarker = null;
-        }
-    }
-    $(document).ready(function(){
-        loadMarkers();
-        setInterval(updateMarkers, 5000);
-    });
-</script>
-</body>
+            $(document).ready(function(){
+                loadMarkers();
+                setInterval(updateMarkers, 5000);
+            });
+        </script>
+    </body>
 </html>

@@ -5,13 +5,13 @@ L.tileLayer('http://{s}.google.com/vt?lyrs=p&x={x}&y={y}&z={z}',{
 }).addTo(map);
 
 var airplaneIcon = L.icon({
-    iconUrl: '/static/airplane.png',
+    iconUrl: '/static/img/airplane.png',
     iconSize: [36, 36],
     iconAnchor: [18, 18]
 });
 
 var airplaneIconSel = L.icon({
-    iconUrl: '/static/airplane-selected.png',
+    iconUrl: '/static/img/airplane-selected.png',
     iconSize: [36, 36],
     iconAnchor: [18, 18]
 });
