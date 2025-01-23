@@ -1,0 +1,12 @@
+[Unit]
+Description=Gunicorn instance to serve hexdb-radar
+After=network.target
+
+[Service]
+User=josh
+Group=www-data
+WorkingDirectory=/home/josh/hexdb-radar
+ExecStart=/usr/bin/gunicorn --workers 10 --bind 0.0.0.0:5001 wsgi:app --access-logformat '%({X-Forwarded-For}i)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"' --access-logfile 'radar.log' --timeout 90 --log-syslog --error-logfile 'error.log'
+
+[Install]
+WantedBy=multi-user.target
